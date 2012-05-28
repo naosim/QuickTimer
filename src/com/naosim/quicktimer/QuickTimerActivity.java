@@ -1,21 +1,26 @@
 package com.naosim.quicktimer;
 
-import java.text.NumberFormat;
-
 import android.app.Activity;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.TextView;
 
 public class QuickTimerActivity extends Activity implements Runnable {
 	
-	Handler handler = new Handler();
-	CountDownTimer timer;
+    private static final int[] minutes = {1, 2, 3, 5, 10, 15, 30, 45, 60, 90};
+    
+	public Handler handler = new Handler();
+	public CountDownTimer timer;
 	
-	TextView min;
-	TextView sec;
-	TextView msec;
+	public TextView min;
+	public TextView sec;
+	public TextView msec;
 	
     /** Called when the activity is first created. */
     @Override
@@ -29,7 +34,7 @@ public class QuickTimerActivity extends Activity implements Runnable {
         msec = (TextView)findViewById(R.id.msec);
         
         timer = new CountDownTimer();
-        timer.setInterval(60 * 1000);
+        timer.setInterval(5 * 1000);
         timer.start();
         
         update();
@@ -41,7 +46,26 @@ public class QuickTimerActivity extends Activity implements Runnable {
 	public void run() {
 		update();
 		
-		handler.postDelayed(this, 10);
+		if(timer.getRestTime() > 0) {
+			handler.postDelayed(this, 10);
+		}
+		else {
+			playRingtone();
+		}
+	}
+	
+	public void playRingtone() {
+		//通常の着信音を選択する
+        Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+        ringtone.play();
+        new Handler().postDelayed(new Runnable(){
+
+			@Override
+			public void run() {
+				ringtone.stop();
+				
+			}}, 5000);
 	}
 	
 	public void update() {
@@ -65,6 +89,25 @@ public class QuickTimerActivity extends Activity implements Runnable {
 		
 		return p + n; 
 	}
+	
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // メニューアイテムを追加します
+		for(int i = 0; i < minutes.length; i++) {
+			int num = i + 1;
+			menu.add(Menu.NONE, Menu.FIRST + num, Menu.NONE, "" + minutes[i] + "分");
+		}
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    // オプションメニューアイテムが選択された時に呼び出されます
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	int index = item.getItemId() - (Menu.FIRST + 1);
+    	
+    	timer.interval = minutes[index] * 60 * 1000;
+        return true;
+    }
 	
 	
 }

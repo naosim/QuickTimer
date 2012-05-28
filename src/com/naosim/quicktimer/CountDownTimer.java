@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class CountDownTimer {
 	public long interval;
-	public long goalDate;
+	
+	public long startDate;
 	
 	public CountDownTimer setInterval(long interval) {
 		this.interval = interval;
@@ -12,11 +13,11 @@ public class CountDownTimer {
 	}
 	
 	public void start() {
-		goalDate = new Date().getTime() + interval;
+		startDate = new Date().getTime();
 	}
 	
 	public long getRestTime() {
-		return goalDate - new Date().getTime();
+		return startDate + interval - new Date().getTime();
 	}
 	
 	public static int[] formatTime(long restTime) {
