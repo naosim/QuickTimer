@@ -16,6 +16,10 @@ public class CountDownTimer {
 		startDate = new Date().getTime();
 	}
 	
+	public boolean isDoing() {
+		return getRestTime() >= 0;
+	}
+	
 	public long getRestTime() {
 		return startDate + interval - new Date().getTime();
 	}

@@ -34,7 +34,7 @@ public class QuickTimerActivity extends Activity implements Runnable {
         msec = (TextView)findViewById(R.id.msec);
         
         timer = new CountDownTimer();
-        timer.setInterval(5 * 1000);
+        timer.setInterval(60 * 1000);
         timer.start();
         
         update();
@@ -54,11 +54,18 @@ public class QuickTimerActivity extends Activity implements Runnable {
 		}
 	}
 	
+	Ringtone ringtone;
+	
 	public void playRingtone() {
+		if(ringtone != null && ringtone.isPlaying()) {
+			return;
+		}
+		
 		//通常の着信音を選択する
         Uri uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        final Ringtone ringtone = RingtoneManager.getRingtone(this, uri);
+        ringtone = RingtoneManager.getRingtone(this, uri);
         ringtone.play();
+        
         new Handler().postDelayed(new Runnable(){
 
 			@Override
@@ -103,9 +110,15 @@ public class QuickTimerActivity extends Activity implements Runnable {
     // オプションメニューアイテムが選択された時に呼び出されます
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	int index = item.getItemId() - (Menu.FIRST + 1);
     	
+    	if(!timer.isDoing()) {
+    		timer.start();
+    	}
+    	int index = item.getItemId() - (Menu.FIRST + 1);
     	timer.interval = minutes[index] * 60 * 1000;
+    	
+    	handler.postDelayed(this, 10);
+    	
         return true;
     }
 	
