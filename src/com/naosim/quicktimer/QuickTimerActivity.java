@@ -33,13 +33,31 @@ public class QuickTimerActivity extends Activity implements Runnable {
         sec = (TextView)findViewById(R.id.sec);
         msec = (TextView)findViewById(R.id.msec);
         
-        timer = new CountDownTimer();
+    }
+    
+    public boolean isActive = false;
+    
+    @Override
+    protected void onStart() {
+    	super.onStart();
+    	isActive = true;
+    	
+    	timer = new CountDownTimer();
         timer.setInterval(60 * 1000);
         timer.start();
         
         update();
-        
-        handler.postDelayed(this, 10);
+    	
+    	handler.postDelayed(this, 10);
+    	
+    	
+    	
+    }
+    
+    @Override
+    protected void onStop() {
+    	super.onStop();
+    	isActive = false;
     }
 
 	@Override
@@ -47,7 +65,9 @@ public class QuickTimerActivity extends Activity implements Runnable {
 		update();
 		
 		if(timer.getRestTime() > 0) {
-			handler.postDelayed(this, 10);
+			if(isActive) {
+				handler.postDelayed(this, 10);
+			}
 		}
 		else {
 			playRingtone();
