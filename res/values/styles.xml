@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="number">
+        <item name="android:textSize">100sp</item>
+    </style>
+</resources>
