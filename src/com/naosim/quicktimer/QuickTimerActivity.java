@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class QuickTimerActivity extends Activity implements Runnable {
@@ -52,6 +53,19 @@ public class QuickTimerActivity extends Activity implements Runnable {
     	
     	
     	
+    }
+    
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        
+    }
+    
+    @Override
+    protected void onPause() {
+    	// TODO Auto-generated method stub
+    	super.onPause();
+    	getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);  
     }
     
     @Override
