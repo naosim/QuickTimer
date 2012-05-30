@@ -4,12 +4,21 @@ import java.util.Date;
 
 import android.os.Handler;
 
+/**
+ * タイマーの管理クラス
+ * 利用後は必ず、onDestoryを呼ぶこと。(アプリ終了時とか)
+ * @author naosim
+ *
+ */
 public class CountDownTimer implements Runnable {
 	public static final String TAG = "CountDownTimer";
+	/** タイマーの時間[ms] */
 	public long interval;
+	/** 開始時刻 */
 	public long startDate;
+	/** 定期的にループをまわすためのHandler */
 	public Handler handler;
-	
+	/** イベントのリスナー */
 	CountDownTimerListener countDownTimerListener;
 	
 	public CountDownTimer(CountDownTimerListener countDownTimerListener) {
@@ -21,6 +30,11 @@ public class CountDownTimer implements Runnable {
 		return this;
 	}
 	
+	/**
+	 * タイマー時間の設定
+	 * @param interval
+	 * @return
+	 */
 	public CountDownTimer setInterval(long interval) {
 		this.interval = interval;
 		return this;
@@ -56,36 +70,12 @@ public class CountDownTimer implements Runnable {
 		return handler != null && getRestTime() >= 0;
 	}
 	
+	/**
+	 * 残り時間の取得
+	 * @return 残り時間[ms]
+	 */
 	public long getRestTime() {
 		return startDate + interval - new Date().getTime();
-	}
-	
-	public static int[] formatTime(long restTime) {
-		int[] result = new int[4];
-		
-		if(restTime < 0) {
-			result[0] = 0;
-			result[1] = 0;
-			result[2] = 0;
-			result[3] = 0;
-			return result;
-		}
-		
-		long hour = restTime / (1000 * 60 * 60);
-		restTime -= hour * 1000 * 60 * 60;
-		
-		long minute = restTime / (1000 * 60);
-		restTime -= minute * 1000 * 60;
-		
-		long sec = restTime / (1000);
-		restTime -= sec * 1000;
-	
-		result[0] = (int)restTime;
-		result[1] = (int)sec;
-		result[2] = (int)minute;
-		result[3] = (int)hour;
-		
-		return result;
 	}
 	
 	@Override
@@ -111,16 +101,23 @@ public class CountDownTimer implements Runnable {
 	
 	// すべてリセット
 	public void destroy() {
-		countDownTimerListener = null;
+		// ハンドラー解放
 		if(handler != null) {
 			handler.removeCallbacks(this);
 			handler = null;
 		}
 		
-		interval = 0;
-		startDate = 0;
+		// メンバー解放
+//		countDownTimerListener = null;
+//		interval = 0;
+//		startDate = 0;
 	}
 	
+	/**
+	 * タイマーのイベントリスナー
+	 * @author naosim
+	 *
+	 */
 	public static interface CountDownTimerListener {
 		/**
 		 * タイマー起動中のイベント
@@ -131,17 +128,30 @@ public class CountDownTimer implements Runnable {
 		public void onDoing(TimeSet timeSet);
 		
 		/**
-		 * タイマー終了
+		 * タイマー終了のイベント
 		 */
 		public void onFinish(CountDownTimer timer);
 	}
 	
+	/**
+	 * 時間情報
+	 * @author naosim
+	 *
+	 */
 	public static class TimeSet {
+		/** ミリ秒 */
 		public int msec = 0;
+		/** 秒 */
 		public int sec = 0;
+		/** 分 */
 		public int minute = 0;
+		/** 時間 */
 		public int hour = 0;
 		
+		/**
+		 * コンストラクタ
+		 * @param time
+		 */
 		public TimeSet(long time) {
 			if(time < 0) {
 				return;

@@ -15,10 +15,12 @@ import com.naosim.quicktimer.CountDownTimer.TimeSet;
 public class QuickTimerActivity extends Activity implements CountDownTimerListener {
 	
 	/** 設定できる時間[分]の配列 */
-    private static final int[] MINUTES = {1, 2, 3, 5, 10, 15, 30, 45, 60, 90};
+    public static final int[] MINUTES = {1, 2, 3, 5, 10, 15, 30, 45, 60, 90};
+    
+    public static final long DEFAULT_TIME = 60 * 1000;
     
 	public Handler handler = new Handler();
-	public CountDownTimer timer;
+	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
 	public RingtonePlayer ringtonePlayer = new RingtonePlayer(this);
 	
@@ -45,43 +47,31 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
     protected void onStart() {
     	super.onStart();
     	
-    	timer = new CountDownTimer(this).setInterval(60 * 1000).start();
-    	
+    	timer.setInterval(DEFAULT_TIME).start();
     }
     
     @Override
     protected void onResume() {
     	super.onResume();
-    	getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        
+    	// スリープに入らないように設定
+    	getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
     
     @Override
     protected void onPause() {
     	super.onPause();
-    	getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);  
+    	// スリープに入らない設定を解除
+    	getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); 
+    	
     }
     
     @Override
     protected void onStop() {
     	super.onStop();
-    	
+    	// タイマー解放
     	timer.destroy();
     }
-	
-//	/**
-//	 * 表示の更新
-//	 */
-//	public void update() {
-//		// 残り時間の取得
-//		int[] a = CountDownTimer.formatTime(timer.getRestTime());
-//		
-//		// viewへセット
-//		msec.setText(Utils.format3(a[0]));
-//		sec.setText(Utils.format2(a[1]));
-//		min.setText(Utils.format2(a[2]));
-//	}
-	
-	
+		
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // メニューアイテムを追加します
