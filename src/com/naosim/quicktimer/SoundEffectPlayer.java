@@ -66,5 +66,12 @@ public class SoundEffectPlayer {
 	public void playAlerm() {
 		alerm.start();
 	}
+	
+	public void stopAlerm() {
+		if(alerm.isPlaying()) {
+			alerm.pause();
+			alerm.seekTo(0);
+		}
+	}
 
 }

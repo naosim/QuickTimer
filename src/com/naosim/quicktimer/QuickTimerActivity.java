@@ -193,6 +193,7 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 	@Override
 	public void onClick(View v) {
 		if(v.getId() == R.id.baseView) {
+			sePlayer.stopAlerm();
 			// 画面を押したらメニューが表示される
 			openOptionsMenu();
 		}
