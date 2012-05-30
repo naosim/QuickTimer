@@ -1,8 +1,12 @@
 package com.naosim.quicktimer;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
@@ -27,6 +31,8 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 	public TextView min;
 	public TextView sec;
 	public TextView msec;
+	/** タイマー中に戻るキーを押した場合に表示するダイアログ */
+	public Dialog backDialog;
 	
     /** Called when the activity is first created. */
     @Override
@@ -41,13 +47,14 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
         sec = (TextView)findViewById(R.id.sec);
         msec = (TextView)findViewById(R.id.msec);
         
+        backDialog = createBackDialog();
+        
+        timer.setInterval(DEFAULT_TIME).start();
     }
     
     @Override
     protected void onStart() {
     	super.onStart();
-    	
-    	timer.setInterval(DEFAULT_TIME).start();
     }
     
     @Override
@@ -68,6 +75,12 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
     @Override
     protected void onStop() {
     	super.onStop();
+    	
+    }
+    
+    @Override
+    protected void onDestroy() {
+    	super.onDestroy();
     	// タイマー解放
     	timer.destroy();
     }
@@ -118,5 +131,42 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 		ringtonePlayer.play();
 	}
 	
+	public Dialog createBackDialog() {
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("確認");
+        alertDialogBuilder.setMessage("アプリを終了するとタイマーも終了しますが、よろしいですか？");
+        alertDialogBuilder.setPositiveButton(android.R.string.ok,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    	finish();
+                    }
+                });
+        alertDialogBuilder.setNegativeButton(android.R.string.cancel,
+                null);
+        alertDialogBuilder.setCancelable(true);
+        return alertDialogBuilder.create();
+	}
+	
+	/**
+	 * キーを押されたときのイベント
+	 * タイマー起動中に戻るボタンが押された場合、アプリを終了して良いかの確認ダイアログを表示する
+	 */
+	@Override
+	public boolean dispatchKeyEvent(KeyEvent e) {
+		// キーコード表示
+		// 戻るボタンが押されたとき
+		if(e.getKeyCode() == KeyEvent.KEYCODE_BACK && e.getAction() == KeyEvent.ACTION_UP) {
+			if(!timer.isDoing()) {
+				return super.dispatchKeyEvent(e);
+			}
+
+			// アプリ終了の確認ダイアログ
+	        backDialog.show();
+			
+	        return true;
+		}
+		return super.dispatchKeyEvent(e);
+	}
 	
 }
