@@ -111,13 +111,13 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 	@Override
 	public void onPanelClosed(int featureId, Menu menu) {
 		super.onPanelClosed(featureId, menu);
-		sePlayer.playPi();
+//		sePlayer.playPi();
 	}
 
     // オプションメニューアイテムが選択された時に呼び出されます
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-    	sePlayer.playPi();
+    	sePlayer.playSelect();
     	
     	// 選択した時間[ms]の取得
     	int index = item.getItemId() - (Menu.FIRST + 1);

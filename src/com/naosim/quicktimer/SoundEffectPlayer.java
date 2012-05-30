@@ -21,6 +21,7 @@ public class SoundEffectPlayer {
 	
 	public MediaPlayer alerm;
 	public MediaPlayer pi;
+	public MediaPlayer select;
 	
 	/**
 	 * コンストラクタ
@@ -32,6 +33,8 @@ public class SoundEffectPlayer {
 	    alerm.setLooping(false);
 	    pi = MediaPlayer.create(context, R.raw.pi);
 	    pi.setLooping(false);
+	    select = MediaPlayer.create(context, R.raw.get_2);
+	    select.setLooping(false);
 	}
 	
 	/**
@@ -61,6 +64,14 @@ public class SoundEffectPlayer {
 	
 	public void playPi() {
 		pi.start();
+	}
+	
+	public void playSelect() {
+		if(select.isPlaying()) {
+			select.pause();
+			select.seekTo(0);
+		}
+		select.start();
 	}
 	
 	public void playAlerm() {
