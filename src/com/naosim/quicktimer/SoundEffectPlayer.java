@@ -1,6 +1,7 @@
 package com.naosim.quicktimer;
 
 import android.content.Context;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -11,19 +12,26 @@ import android.os.Handler;
  * @author naosim
  *
  */
-public class RingtonePlayer {
+public class SoundEffectPlayer {
 	/** 再生時間[msec] */
 	public static final int TIME_PLAYING = 5000;
 	
 	protected Ringtone mRingtone;
 	protected Context mContext;
 	
+	public MediaPlayer alerm;
+	public MediaPlayer pi;
+	
 	/**
 	 * コンストラクタ
 	 * @param context
 	 */
-	public RingtonePlayer(Context context) {
+	public SoundEffectPlayer(Context context) {
 		this.mContext = context;
+		alerm = MediaPlayer.create(context, R.raw.buz_1);
+	    alerm.setLooping(false);
+	    pi = MediaPlayer.create(context, R.raw.pi);
+	    pi.setLooping(false);
 	}
 	
 	/**
@@ -49,6 +57,14 @@ public class RingtonePlayer {
 				mRingtone.stop();
 				
 			}}, TIME_PLAYING);
+	}
+	
+	public void playPi() {
+		pi.start();
+	}
+	
+	public void playAlerm() {
+		alerm.start();
 	}
 
 }

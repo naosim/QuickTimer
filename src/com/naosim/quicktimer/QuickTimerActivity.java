@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.KeyEvent;
@@ -26,14 +27,14 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 	public Handler handler = new Handler();
 	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
-	public RingtonePlayer ringtonePlayer = new RingtonePlayer(this);
+	public SoundEffectPlayer sePlayer;
 	
 	public TextView min;
 	public TextView sec;
 	public TextView msec;
 	/** タイマー中に戻るキーを押した場合に表示するダイアログ */
 	public Dialog backDialog;
-	
+		
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,8 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
         backDialog = createBackDialog();
         
         timer.setInterval(DEFAULT_TIME).start();
+        
+        sePlayer = new SoundEffectPlayer(this);
     }
     
     @Override
@@ -94,10 +97,23 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 		}
         return super.onCreateOptionsMenu(menu);
     }
+	
+	@Override
+	public boolean onMenuOpened(int featureId, Menu menu) {
+		sePlayer.playPi();
+		return super.onMenuOpened(featureId, menu);
+	}
+	
+	@Override
+	public void onPanelClosed(int featureId, Menu menu) {
+		super.onPanelClosed(featureId, menu);
+		sePlayer.playPi();
+	}
 
     // オプションメニューアイテムが選択された時に呼び出されます
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	sePlayer.playPi();
     	
     	// 選択した時間[ms]の取得
     	int index = item.getItemId() - (Menu.FIRST + 1);
@@ -128,7 +144,8 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 
 	@Override
 	public void onFinish(CountDownTimer timer) {
-		ringtonePlayer.play();
+//		ringtonePlayer.play();
+		sePlayer.playAlerm();
 	}
 	
 	public Dialog createBackDialog() {
