@@ -10,6 +10,8 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -17,7 +19,7 @@ import android.widget.TextView;
 import com.naosim.quicktimer.CountDownTimer.CountDownTimerListener;
 import com.naosim.quicktimer.CountDownTimer.TimeSet;
 
-public class QuickTimerActivity extends Activity implements CountDownTimerListener {
+public class QuickTimerActivity extends Activity implements CountDownTimerListener, OnClickListener {
 	
 	/** 設定できる時間[分]の配列 */
     public static final int[] MINUTES = {1, 2, 3, 5, 10, 15, 30, 45, 60, 90};
@@ -47,6 +49,8 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
         min = (TextView)findViewById(R.id.min);
         sec = (TextView)findViewById(R.id.sec);
         msec = (TextView)findViewById(R.id.msec);
+        
+        findViewById(R.id.baseView).setOnClickListener(this);
         
         backDialog = createBackDialog();
         
@@ -184,6 +188,15 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 	        return true;
 		}
 		return super.dispatchKeyEvent(e);
+	}
+
+	@Override
+	public void onClick(View v) {
+		if(v.getId() == R.id.baseView) {
+			// 画面を押したらメニューが表示される
+			openOptionsMenu();
+		}
+		
 	}
 	
 }
