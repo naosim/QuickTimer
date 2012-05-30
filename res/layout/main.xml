@@ -44,45 +44,25 @@
          
          <TextView
              android:id="@+id/min"
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:layout_weight="4"
-             android:textColor="@color/yellow"
+             android:layout_weight="5"
              style="@style/number"
              android:text="00" />
          <TextView
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:gravity="center"
              android:layout_weight="1"
-             android:textColor="@color/yellow"
              style="@style/number"
              android:text=":" />
          <TextView
              android:id="@+id/sec"
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:layout_weight="4"
-             android:textColor="@color/yellow"
+             android:layout_weight="5"
              style="@style/number"
              android:text="00" />
          <TextView
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:gravity="center"
              android:layout_weight="1"
-             android:textColor="@color/yellow"
              style="@style/number"
              android:text=":" />
          <TextView
              android:id="@+id/msec"
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:gravity="center"
-             android:layout_weight="4"
-             android:textColor="@color/yellow"
+             android:layout_weight="5"
              style="@style/number"
              android:text="000" />
         
