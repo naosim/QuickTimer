@@ -22,6 +22,7 @@ public class SoundEffectPlayer {
 	public MediaPlayer alerm;
 	public MediaPlayer pi;
 	public MediaPlayer select;
+	public MediaPlayer bump;
 	
 	/**
 	 * コンストラクタ
@@ -29,12 +30,14 @@ public class SoundEffectPlayer {
 	 */
 	public SoundEffectPlayer(Context context) {
 		this.mContext = context;
-		alerm = MediaPlayer.create(context, R.raw.buz_1);
+		alerm = MediaPlayer.create(context, R.raw.eb_win);
 	    alerm.setLooping(false);
-	    pi = MediaPlayer.create(context, R.raw.pi);
+	    pi = MediaPlayer.create(context, R.raw.buy1);
 	    pi.setLooping(false);
 	    select = MediaPlayer.create(context, R.raw.get_2);
 	    select.setLooping(false);
+	    bump = MediaPlayer.create(context, R.raw.get_2);
+	    bump.setLooping(false); 
 	}
 	
 	/**
@@ -64,6 +67,10 @@ public class SoundEffectPlayer {
 	
 	public void playPi() {
 		pi.start();
+	}
+	
+	public void playBump() {
+		bump.start();
 	}
 	
 	public void playSelect() {

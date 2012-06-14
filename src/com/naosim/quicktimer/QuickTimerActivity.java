@@ -1,12 +1,14 @@
 package com.naosim.quicktimer;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Handler;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,6 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.naosim.quicktimer.CountDownTimer.CountDownTimerListener;
 import com.naosim.quicktimer.CountDownTimer.TimeSet;
@@ -26,7 +29,6 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
     
     public static final long DEFAULT_TIME = 60 * 1000;
     
-	public Handler handler = new Handler();
 	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
 	public SoundEffectPlayer sePlayer;
@@ -51,6 +53,7 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
         msec = (TextView)findViewById(R.id.msec);
         
         findViewById(R.id.baseView).setOnClickListener(this);
+        findViewById(R.id.stopText).setOnClickListener(this);
         
         backDialog = createBackDialog();
         
@@ -99,6 +102,7 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 			int num = i + 1;
 			menu.add(Menu.NONE, Menu.FIRST + num, Menu.NONE, "" + MINUTES[i] + "分");
 		}
+		menu.add(Menu.NONE, Menu.FIRST + MINUTES.length + 1, Menu.NONE, "時刻指定");
         return super.onCreateOptionsMenu(menu);
     }
 	
@@ -121,10 +125,14 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
     	
     	// 選択した時間[ms]の取得
     	int index = item.getItemId() - (Menu.FIRST + 1);
-    	long interval = MINUTES[index] * 60 * 1000;
+    	if(index < MINUTES.length) {
+    		long interval = MINUTES[index] * 60 * 1000;
     	
-    	// タイマーをセット
-    	setTimer(interval);
+    		// タイマーをセット
+    		setTimer(interval);
+    	} else {
+    		showTimePickerDialog();
+    	}
     	
         return true;
     }
@@ -196,8 +204,25 @@ public class QuickTimerActivity extends Activity implements CountDownTimerListen
 			sePlayer.stopAlerm();
 			// 画面を押したらメニューが表示される
 			openOptionsMenu();
+		} else if(v.getId() == R.id.stopText) {
+			if(timer.stop()) {
+				sePlayer.playBump();
+			}
 		}
 		
+	}
+	
+	public void showTimePickerDialog() {
+		Date now = new Date();
+		final TimePickerDialog timePickerDialog = new TimePickerDialog(this,
+	            new TimePickerDialog.OnTimeSetListener() {
+	                @Override
+	                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+	                	Log.e("TAG", "" + hourOfDay + ", " + minute);
+	                    timer.setTime(hourOfDay, minute).start();
+	                }
+	            }, now.getHours(), now.getMinutes(), true);
+		timePickerDialog.show();
 	}
 	
 }
