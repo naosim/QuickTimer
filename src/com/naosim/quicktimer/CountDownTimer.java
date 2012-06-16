@@ -3,6 +3,7 @@ package com.naosim.quicktimer;
 import java.util.Date;
 import java.util.TimeZone;
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.text.format.DateUtils;
 import android.util.Log;
@@ -15,6 +16,11 @@ import android.util.Log;
  */
 public class CountDownTimer implements Runnable, LifeSycle {
 	public static final String TAG = "CountDownTimer";
+
+	public static final String KEY_INTERVAL = "interval";
+	public static final String KEY_IS_DOING = "isDoing";
+	public static final String KEY_START_DATE = "START_DATE";
+	public static final String KEY_REST_TIME = "restTime";
 	/** タイマーの時間[ms] */
 	public long interval;
 	public int hour;
@@ -22,6 +28,7 @@ public class CountDownTimer implements Runnable, LifeSycle {
 
 	/** 開始時刻 */
 	public long startDate;
+	public long restTime;
 	/** 定期的にループをまわすためのHandler */
 	public Handler handler;
 	/** イベントのリスナー */
@@ -98,8 +105,10 @@ public class CountDownTimer implements Runnable, LifeSycle {
 		startDate = startDate + TimeZone.getDefault().getOffset(0);
 
 		// 本日の00:00を取得
-		long now = (startDate / DateUtils.DAY_IN_MILLIS) * DateUtils.DAY_IN_MILLIS;
-		long endDate = hour * DateUtils.HOUR_IN_MILLIS + minute * DateUtils.MINUTE_IN_MILLIS + now;
+		long now = (startDate / DateUtils.DAY_IN_MILLIS)
+				* DateUtils.DAY_IN_MILLIS;
+		long endDate = hour * DateUtils.HOUR_IN_MILLIS + minute
+				* DateUtils.MINUTE_IN_MILLIS + now;
 		interval = endDate - startDate;
 		if (interval < 0) {
 			// 過去の時刻だったら1日加える
@@ -110,9 +119,15 @@ public class CountDownTimer implements Runnable, LifeSycle {
 	}
 
 	public boolean stop() {
+		if (countDownTimerListener != null) {
+			countDownTimerListener.onDoing(new TimeSet(restTime));
+		}
+
 		if (handler != null) {
+
 			handler.removeCallbacks(this);
 			handler = null;
+
 			return true;
 		} else {
 			return false;
@@ -126,7 +141,6 @@ public class CountDownTimer implements Runnable, LifeSycle {
 	 */
 	public boolean isDoing() {
 		// handlerが存在し、かつ、残り時間が正の値
-		Log.e("CountDownTimer", "time" + getRestTime());
 		return handler != null && getRestTime() >= 0;
 	}
 
@@ -136,7 +150,10 @@ public class CountDownTimer implements Runnable, LifeSycle {
 	 * @return 残り時間[ms]
 	 */
 	public long getRestTime() {
-		return startDate + interval - new Date().getTime();
+		Long result = startDate + interval - new Date().getTime();
+		restTime = result;
+
+		return result;
 	}
 
 	@Override
@@ -154,7 +171,7 @@ public class CountDownTimer implements Runnable, LifeSycle {
 			if (countDownTimerListener != null) {
 				countDownTimerListener.onFinish(this);
 			}
-			
+
 		}
 
 		// リスナーへ通知
@@ -174,7 +191,7 @@ public class CountDownTimer implements Runnable, LifeSycle {
 		}
 
 		// メンバー解放
-		 countDownTimerListener = null;
+		countDownTimerListener = null;
 		// interval = 0;
 		// startDate = 0;
 	}
@@ -242,26 +259,52 @@ public class CountDownTimer implements Runnable, LifeSycle {
 
 	@Override
 	public void onStart() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onStop() {
-		// TODO Auto-generated method stub
-		
+
+	}
+
+	public void save(Bundle outState) {
+		// 設定した時間を保存する
+		outState.putLong(KEY_INTERVAL, restTime);
+		outState.putLong(KEY_START_DATE, startDate);
+		outState.putLong(KEY_REST_TIME, restTime);
+		outState.putBoolean(KEY_IS_DOING, isDoing());
+	}
+
+	public void load(Bundle savedInstanceState) {
+		long interval = 0;
+		boolean isDoing = true;
+		long startDate = new Date().getTime();
+		long restTime = 0;
+
+		interval = savedInstanceState.getLong(KEY_INTERVAL, interval);
+		isDoing = savedInstanceState.getBoolean(KEY_IS_DOING, isDoing);
+		startDate = savedInstanceState.getLong(KEY_START_DATE, startDate);
+		restTime = savedInstanceState.getLong(KEY_REST_TIME, restTime);
+
+		setInterval(interval);
+		if (isDoing) {
+			start();
+		} else {
+			this.startDate = startDate;
+			this.restTime = restTime;
+			stop();
+		}
+
 	}
 
 }

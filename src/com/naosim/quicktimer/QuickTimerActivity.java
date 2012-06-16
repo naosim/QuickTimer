@@ -28,7 +28,6 @@ import com.naosim.quicktimer.CountDownTimer.TimeSet;
 public class QuickTimerActivity extends Activity implements
 		CountDownTimerListener, OnClickListener {
 	public static final String TAG = "QuickTimerActivity";
-	public static final String KEY_INTERVAL = "interval";
 
 	/** 設定できる時間[分]の配列 */
 	public static final int[] MINUTES = { 1, 2, 3, 5, 10, 15, 30, 45, 60, 90 };
@@ -52,8 +51,6 @@ public class QuickTimerActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		
 
 		// タイトルバー削除
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,12 +64,13 @@ public class QuickTimerActivity extends Activity implements
 		findViewById(R.id.stopText).setOnClickListener(this);
 
 		backDialog = createBackDialog();
-
-		long interval = DEFAULT_TIME;
-		if(savedInstanceState != null) {
-			interval = savedInstanceState.getLong(KEY_INTERVAL, DEFAULT_TIME);
+		
+		if(savedInstanceState == null) {
+			timer.setInterval(DEFAULT_TIME).start();
+		}else{
+			timer.load(savedInstanceState);
 		}
-		timer.setInterval(interval).start();
+		
 		lifeSycleManager.add(timer);
 
 		sePlayer = new SoundEffectPlayer(this);
@@ -82,12 +80,15 @@ public class QuickTimerActivity extends Activity implements
 		Typeface typeface = Typeface.createFromAsset(getAssets(), "square.ttf");
 		setupFont((ViewGroup)findViewById(R.id.baseView), typeface);
 	}
-		
+	
+	/**
+	 * 縦横切り替え時のイベント
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		// 縦横切り替え時に、設定した時間を保存する
-		outState.putLong(KEY_INTERVAL, timer.getRestTime());
+		// 設定した時間を保存する
+		timer.save(outState);
 		
 		
 	}
