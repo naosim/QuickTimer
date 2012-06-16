@@ -9,5 +9,9 @@
     <string name="second">SECOND</string>
     <string name="msecond">MSECOND</string>
     <string name="stop">STOP</string>
+    <string name="fontFileName">square.ttf</string>
+    <string name="menuMinuteText">分</string>
+    <string name="menuTime">時刻指定</string>
+    <string name="backAlertMessage">アプリを終了するとタイマーも終了しますが、よろしいですか？</string>
 
 </resources>

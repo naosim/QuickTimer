@@ -90,7 +90,7 @@ public class QuickTimerActivity extends Activity implements
 		lifeSycleManager.add(sePlayer);
 
 		// TextViewのフォントを変更する
-		Typeface typeface = Typeface.createFromAsset(getAssets(), "square.ttf");
+		Typeface typeface = Typeface.createFromAsset(getAssets(), getString(R.string.fontFileName));
 		setupFont((ViewGroup) findViewById(R.id.baseView), typeface);
 	}
 
@@ -160,9 +160,9 @@ public class QuickTimerActivity extends Activity implements
 		for (int i = 0; i < MINUTES.length; i++) {
 			int num = i + 1;
 			menu.add(Menu.NONE, Menu.FIRST + num, Menu.NONE, "" + MINUTES[i]
-					+ "分");
+					+ getString(R.string.menuMinuteText));
 		}
-		menu.add(Menu.NONE, Menu.FIRST + MINUTES.length + 1, Menu.NONE, "時刻指定");
+		menu.add(Menu.NONE, Menu.FIRST + MINUTES.length + 1, Menu.NONE, getString(R.string.menuTime));
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -215,8 +215,8 @@ public class QuickTimerActivity extends Activity implements
 
 	public Dialog createBackDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder.setTitle("確認");
-		alertDialogBuilder.setMessage("アプリを終了するとタイマーも終了しますが、よろしいですか？");
+		alertDialogBuilder.setTitle(getString(android.R.string.dialog_alert_title));
+		alertDialogBuilder.setMessage(getString(R.string.backAlertMessage));
 		alertDialogBuilder.setPositiveButton(android.R.string.ok,
 				onClickListener);
 		alertDialogBuilder.setNegativeButton(android.R.string.cancel, null);

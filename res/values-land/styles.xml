@@ -8,6 +8,10 @@
         <item name="android:textColor">@color/yellow</item>
         <item name="android:textSize">24sp</item>
         <item name="android:layout_weight">3</item>
+        <item name="android:shadowColor">#000</item>
+        <item name="android:shadowDx">0.0</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">4</item>
     </style>
 
     <style name="bit3">
