@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- 画面下側のボタン -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
@@ -10,8 +11,9 @@
     <TextView
         android:id="@+id/optionText"
         style="@style/button"
-        android:text="OPTION" />
-    
+        android:text="OPTION"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/stopText"
         style="@style/button"
@@ -21,7 +23,5 @@
         android:id="@+id/settingText"
         style="@style/button"
         android:text="SETTING" />
-
-    
 
 </LinearLayout>

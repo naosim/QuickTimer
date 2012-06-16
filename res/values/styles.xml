@@ -42,4 +42,9 @@
         <item name="android:textColor">@color/yellow</item>
         <item name="android:textSize">16sp</item>
     </style>
+    <style name="bit3">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:gravity">center_horizontal|bottom</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 </resources>

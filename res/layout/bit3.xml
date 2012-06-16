@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    style="@style/bit3"
     android:layout_height="wrap_content"
-    android:gravity="center_horizontal|bottom"
-    android:layout_weight="1"
     android:orientation="horizontal" >
-         <TextView
-             android:id="@+id/bit1"
-             style="@style/number" />
-         <TextView
-             android:id="@+id/bit2"
-             style="@style/number" />
-         <TextView
-             android:id="@+id/bit3"
-             style="@style/number" />
 
+    <TextView
+        android:id="@+id/bit1"
+        style="@style/number" />
+
+    <TextView
+        android:id="@+id/bit2"
+        style="@style/number" />
+
+    <TextView
+        android:id="@+id/bit3"
+        style="@style/number" />
 
 </LinearLayout>

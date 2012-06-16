@@ -30,6 +30,7 @@
         android:background="@color/yellow" />
 
     <!-- 時間部分 -->
+
     <include layout="@layout/time_display" />
 
     <View
@@ -40,7 +41,5 @@
         android:background="@color/yellow" />
 
     <include layout="@layout/buttons" />
-    
-    
 
 </LinearLayout>
