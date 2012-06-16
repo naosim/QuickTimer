@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="number">
+    <style name="timeCommon">
         <item name="android:layout_width">50dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/yellow</item>
         <item name="android:singleLine">true</item>
         <item name="android:textSize">86sp</item>
+    </style>
+    <style name="number" parent="timeCommon">
         <item name="android:gravity">right</item>
+    </style>
+    <style name="sep" parent="timeCommon">
+        <item name="android:gravity">center</item>
     </style>
 </resources>

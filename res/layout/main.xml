@@ -45,14 +45,14 @@
                 android:id="@+id/minBase"
                 layout="@layout/bit3" />
             <TextView
-                style="@style/number"
+                style="@style/sep"
                 android:layout_weight="1"
                 android:text="@string/sep" />
             <include
                 android:id="@+id/secBase"
                 layout="@layout/bit3" />
             <TextView
-                style="@style/number"
+                style="@style/sep"
                 android:layout_weight="1"
                 android:text="@string/sep" />
 
