@@ -5,131 +5,127 @@
     android:layout_height="fill_parent"
     android:background="@drawable/border"
     android:orientation="vertical" >
-    <View 
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="16dp"
-        android:background="@color/yellow"
-        android:layout_marginTop="4dp"
         android:layout_marginLeft="4dp"
         android:layout_marginRight="4dp"
-        />
+        android:layout_marginTop="4dp"
+        android:background="@color/yellow" />
 
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:textSize="32sp"
         android:gravity="center"
+        android:text="@string/title"
         android:textColor="@color/yellow"
-        android:text="TIME LIMIT" />
-    
-    <View 
+        android:textSize="32sp" />
+
+    <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/yellow"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        />
+        android:background="@color/yellow" />
+
+    <!-- 時間部分 -->
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical"
         android:layout_weight="1"
-        android:orientation="vertical"
-         >
-         
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-         >
-         <include layout="@layout/bit3"
-             android:id="@+id/minBase"
-             />
-         <TextView
-             android:layout_weight="1"
-             style="@style/number"
-             android:text=":" />
+        android:orientation="vertical" >
 
-         
-         <include layout="@layout/bit3"
-             android:id="@+id/secBase"
-             />    
-         <TextView
-             android:layout_weight="1"
-             style="@style/number"
-             android:text=":" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+            <include
+                android:id="@+id/minBase"
+                layout="@layout/bit3" />
+            <TextView
+                style="@style/number"
+                android:layout_weight="1"
+                android:text="@string/sep" />
+            <include
+                android:id="@+id/secBase"
+                layout="@layout/bit3" />
+            <TextView
+                style="@style/number"
+                android:layout_weight="1"
+                android:text="@string/sep" />
 
-         
-         <include layout="@layout/bit3"
-             android:id="@+id/msecBase"
-             />
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-         >
-         <TextView
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:textSize="24sp"
-             android:gravity="center"
-             android:layout_weight="3"
-             android:textColor="@color/yellow"
-             android:text="MINUTE" />
-         
-         <View 
-        	android:layout_width="0dp"
-             android:layout_height="fill_parent"
-             android:layout_weight="1"
-        	/>
-         <TextView
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:textSize="24sp"
-             android:gravity="center"
-             android:layout_weight="3"
-             android:textColor="@color/yellow"
-             android:text="SECOND" />
-         <View 
-        	android:layout_width="0dp"
-             android:layout_height="fill_parent"
-             android:layout_weight="1"
-        	/>
-         <TextView
-             android:layout_width="0dp"
-             android:layout_height="wrap_content"
-             android:textSize="24sp"
-             android:gravity="center"
-             android:layout_weight="3"
-             android:textColor="@color/yellow"
-             android:text="MSECOND" />
-    </LinearLayout>
+            <include
+                android:id="@+id/msecBase"
+                layout="@layout/bit3" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="@string/minute"
+                android:textColor="@color/yellow"
+                android:textSize="24sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="@string/second"
+                android:textColor="@color/yellow"
+                android:textSize="24sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:gravity="center"
+                android:text="@string/msecond"
+                android:textColor="@color/yellow"
+                android:textSize="24sp" />
+        </LinearLayout>
     </LinearLayout>
 
-    <View 
+    <View
         android:layout_width="fill_parent"
         android:layout_height="1dp"
-        android:background="@color/yellow"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        />
+        android:background="@color/yellow" />
 
     <TextView
         android:id="@+id/stopText"
-        android:layout_gravity="right"
-        android:gravity="center"
-        android:background="@drawable/border_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"
+        android:layout_gravity="right"
         android:layout_marginRight="12dp"
-        android:paddingTop="4dp"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/border_stop"
+        android:gravity="center"
         android:paddingBottom="4dp"
-        android:paddingRight="16dp"
         android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="4dp"
+        android:text="@string/stop"
         android:textColor="@color/yellow"
-        android:text="STOP" />
+        android:textSize="16sp" />
+
 </LinearLayout>

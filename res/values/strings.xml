@@ -3,5 +3,11 @@
 
     <string name="hello">Hello World, QuickTimerActivity!</string>
     <string name="app_name">QuickTimer</string>
+    <string name="sep">:</string>
+    <string name="title">TIME LIMIT</string>
+    <string name="minute">MINUTE</string>
+    <string name="second">SECOND</string>
+    <string name="msecond">MSECOND</string>
+    <string name="stop">STOP</string>
 
 </resources>

@@ -5,29 +5,15 @@
     android:gravity="center"
     android:layout_weight="5"
     android:orientation="horizontal" >
-    
-         
          <TextView
              android:id="@+id/bit1"
-             style="@style/numberPort"
-             android:layout_width="50dp"
-             android:layout_height="wrap_content"
-             android:gravity="right"
-             android:text="0" />
+             style="@style/number" />
          <TextView
              android:id="@+id/bit2"
-             style="@style/numberPort"
-             android:layout_width="50dp"
-             android:layout_height="wrap_content"
-             android:gravity="right"
-             android:text="1" />
+             style="@style/number" />
          <TextView
              android:id="@+id/bit3"
-             style="@style/numberPort"
-             android:layout_width="50dp"
-             android:layout_height="wrap_content"
-             android:gravity="right"
-             android:text="0" />
+             style="@style/number" />
 
 
 </LinearLayout>
