@@ -12,7 +12,7 @@ import android.util.Log;
  * @author naosim
  * 
  */
-public class CountDownTimer implements Runnable {
+public class CountDownTimer implements Runnable, LifeSycle {
 	public static final String TAG = "CountDownTimer";
 	/** タイマーの時間[ms] */
 	public long interval;
@@ -159,7 +159,10 @@ public class CountDownTimer implements Runnable {
 			handler = null;
 
 			// 終了通知
-			countDownTimerListener.onFinish(this);
+			if (countDownTimerListener != null) {
+				countDownTimerListener.onFinish(this);
+			}
+			
 		}
 
 		// リスナーへ通知
@@ -170,7 +173,8 @@ public class CountDownTimer implements Runnable {
 	}
 
 	// すべてリセット
-	public void destroy() {
+	@Override
+	public void onDestroy() {
 		// ハンドラー解放
 		if (handler != null) {
 			handler.removeCallbacks(this);
@@ -178,7 +182,7 @@ public class CountDownTimer implements Runnable {
 		}
 
 		// メンバー解放
-		// countDownTimerListener = null;
+		 countDownTimerListener = null;
 		// interval = 0;
 		// startDate = 0;
 	}
@@ -243,4 +247,29 @@ public class CountDownTimer implements Runnable {
 			msec = (int) time;
 		}
 	}
+
+	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onStop() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

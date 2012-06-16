@@ -30,36 +30,63 @@
         android:background="@color/yellow" />
 
     <!-- 時間部分 -->
-
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:layout_weight="1" >
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
 
-        <include
-            android:id="@+id/minBase"
-            layout="@layout/bit3" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical" >
+            <include
+                android:id="@+id/minBase"
+                layout="@layout/bit3" />
+            <TextView
+                style="@style/sep"
+                android:layout_weight="1"
+                android:text="@string/sep" />
+            <include
+                android:id="@+id/secBase"
+                layout="@layout/bit3" />
+            <TextView
+                style="@style/sep"
+                android:layout_weight="1"
+                android:text="@string/sep" />
 
-        <TextView
-            style="@style/unit"
-            android:text="@string/minute"/>
+            <include
+                android:id="@+id/msecBase"
+                layout="@layout/bit3" />
+        </LinearLayout>
 
-        <include
-            android:id="@+id/secBase"
-            layout="@layout/bit3" />
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-        <TextView
-            style="@style/unit"
-            android:text="@string/second" />
+            <TextView
+                style="@style/unit"
+                android:text="@string/minute" />
 
-        <include
-            android:id="@+id/msecBase"
-            layout="@layout/bit3" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
 
-        <TextView
-            style="@style/unit"
-            android:text="@string/msecond" />
+            <TextView
+                style="@style/unit"
+                android:text="@string/second" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1" />
+
+            <TextView
+                style="@style/unit"
+                android:text="@string/msecond" />
+        </LinearLayout>
     </LinearLayout>
 
     <View

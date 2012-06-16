@@ -12,7 +12,7 @@ import android.os.Handler;
  * @author naosim
  *
  */
-public class SoundEffectPlayer {
+public class SoundEffectPlayer implements LifeSycle {
 	/** 再生時間[msec] */
 	public static final int TIME_PLAYING = 5000;
 	
@@ -91,5 +91,35 @@ public class SoundEffectPlayer {
 			alerm.seekTo(0);
 		}
 	}
+	
+	@Override
+	public void onDestroy() {
+		mContext = null;
+		alerm.release();
+		pi.release();
+		select.release();
+		bump.release();
+	}
+
+	@Override
+	public void onStart() {
+		
+	}
+
+	@Override
+	public void onResume() {
+		
+	}
+
+	@Override
+	public void onPause() {
+		
+	}
+
+	@Override
+	public void onStop() {
+		
+	}
+
 
 }

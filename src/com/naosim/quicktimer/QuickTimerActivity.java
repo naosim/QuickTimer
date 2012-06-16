@@ -35,6 +35,8 @@ public class QuickTimerActivity extends Activity implements
 	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
 	public SoundEffectPlayer sePlayer;
+	
+	public LifeSycleManager lifeSycleManager = new LifeSycleManager();
 //
 //	public TextView min;
 //	public TextView sec;
@@ -68,11 +70,15 @@ public class QuickTimerActivity extends Activity implements
 		backDialog = createBackDialog();
 
 		timer.setInterval(DEFAULT_TIME).start();
+		lifeSycleManager.add(timer);
 
 		sePlayer = new SoundEffectPlayer(this);
+		lifeSycleManager.add(sePlayer);
 		
 		Typeface typeface = Typeface.createFromAsset(getAssets(), "square.ttf");
 		setupFont((ViewGroup)findViewById(R.id.baseView), typeface);
+		
+		
 	}
 	
 	public static void setupFont(ViewGroup baseView, Typeface typeface) {
@@ -89,6 +95,7 @@ public class QuickTimerActivity extends Activity implements
 	@Override
 	protected void onStart() {
 		super.onStart();
+		lifeSycleManager.onStart();
 	}
 
 	@Override
@@ -96,6 +103,8 @@ public class QuickTimerActivity extends Activity implements
 		super.onResume();
 		// スリープに入らないように設定
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		lifeSycleManager.onResume();
 	}
 
 	@Override
@@ -103,20 +112,22 @@ public class QuickTimerActivity extends Activity implements
 		super.onPause();
 		// スリープに入らない設定を解除
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		
+		lifeSycleManager.onPause();
 
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
+		lifeSycleManager.onStop();
 
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		// タイマー解放
-		timer.destroy();
+		lifeSycleManager.onDestroy();
 	}
 
 	@Override
