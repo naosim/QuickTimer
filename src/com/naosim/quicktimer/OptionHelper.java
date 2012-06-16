@@ -6,6 +6,7 @@ import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.MenuInflater;
@@ -87,7 +88,13 @@ public class OptionHelper {
 		if (TextUtils.isEmpty(uri)) {
 			return null;
 		}
+		Uri result = Uri.parse(uri);
+		if(result == null) {
+			Log.e("getAlermUri", "uri is null");
+		}
 
+		Log.e("getAlermUri", uri);
+		
 		return Uri.parse(uri);
 	}
 
@@ -96,6 +103,8 @@ public class OptionHelper {
 		if (uri == null) {
 			e.putString(KEY_ALERM_URI, null);
 		} else {
+			Log.e("setUserAlerm path", uri.getPath());
+			Log.e("setUserAlerm uri", uri.toString());
 			e.putString(KEY_ALERM_URI, uri.toString());
 		}
 		e.commit();

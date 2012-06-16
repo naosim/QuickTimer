@@ -72,6 +72,7 @@ public class QuickTimerActivity extends Activity implements
 		sePlayer = new SoundEffectPlayer(this);
 		optionHelper = new OptionHelper(getMenuInflater(), sePlayer, this, getPreferences(MODE_PRIVATE));
 		sePlayer.setSeEnable(optionHelper.getSeEnable());
+		sePlayer.setUserAlerm(optionHelper.getAlermUri());
 
 		minHelper = new Bit3ViewHelper((ViewGroup) findViewById(R.id.minBase))
 				.setBitCount(2);

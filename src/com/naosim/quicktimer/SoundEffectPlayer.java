@@ -155,12 +155,13 @@ public class SoundEffectPlayer implements LifeSycle, OptionListener {
 	public boolean setUserAlerm(Uri uri) {
 		try{
 			alerm = MediaPlayer.create(mContext, uri);
+			alerm.setLooping(false);
 		}catch(Exception e) {
 			return false;
 		}catch (Error e) {
 			return false;
 		}
-	    alerm.setLooping(false);
+	    
 	    return true;
 	}
 	
