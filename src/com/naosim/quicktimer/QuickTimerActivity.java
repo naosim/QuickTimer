@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -26,21 +27,19 @@ import com.naosim.quicktimer.CountDownTimer.TimeSet;
 
 public class QuickTimerActivity extends Activity implements
 		CountDownTimerListener, OnClickListener {
+	public static final String TAG = "QuickTimerActivity";
+	public static final String KEY_INTERVAL = "interval";
 
 	/** 設定できる時間[分]の配列 */
 	public static final int[] MINUTES = { 1, 2, 3, 5, 10, 15, 30, 45, 60, 90 };
 
-	public static final long DEFAULT_TIME = 60 * 1000;
+	public static final long DEFAULT_TIME = 60 * DateUtils.SECOND_IN_MILLIS;
 
 	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
 	public SoundEffectPlayer sePlayer;
 	
 	public LifeSycleManager lifeSycleManager = new LifeSycleManager();
-//
-//	public TextView min;
-//	public TextView sec;
-//	public TextView msec;
 	
 	public Bit3ViewHelper minHelper;
 	public Bit3ViewHelper secHelper;
@@ -69,14 +68,26 @@ public class QuickTimerActivity extends Activity implements
 
 		backDialog = createBackDialog();
 
-		timer.setInterval(DEFAULT_TIME).start();
+		long interval = DEFAULT_TIME;
+		if(savedInstanceState != null) {
+			interval = savedInstanceState.getLong(KEY_INTERVAL, DEFAULT_TIME);
+		}
+		timer.setInterval(interval).start();
 		lifeSycleManager.add(timer);
 
 		sePlayer = new SoundEffectPlayer(this);
 		lifeSycleManager.add(sePlayer);
 		
+		// TextViewのフォントを変更する
 		Typeface typeface = Typeface.createFromAsset(getAssets(), "square.ttf");
 		setupFont((ViewGroup)findViewById(R.id.baseView), typeface);
+	}
+		
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		// 縦横切り替え時に、設定した時間を保存する
+		outState.putLong(KEY_INTERVAL, timer.getRestTime());
 		
 		
 	}

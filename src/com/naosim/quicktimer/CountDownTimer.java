@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import android.os.Handler;
+import android.text.format.DateUtils;
 import android.util.Log;
 
 /**
@@ -18,15 +19,6 @@ public class CountDownTimer implements Runnable, LifeSycle {
 	public long interval;
 	public int hour;
 	public int minute;
-
-	/** 1日をミリ秒にした値 */
-	public static final long MS_DAY = 24 * 60 * 60 * 1000;
-	/** 1時間をミリ秒にした値 */
-	public static final long MS_HOUR = 60 * 60 * 1000;
-	/** 1分をミリ秒にした値 */
-	public static final long MS_MINUTE = 60 * 1000;
-	/** 1秒をミリ秒にした値 */
-	public static final long MS_SECOND = 1000;
 
 	/** 開始時刻 */
 	public long startDate;
@@ -106,12 +98,12 @@ public class CountDownTimer implements Runnable, LifeSycle {
 		startDate = startDate + TimeZone.getDefault().getOffset(0);
 
 		// 本日の00:00を取得
-		long now = (startDate / MS_DAY) * MS_DAY;
-		long endDate = hour * MS_HOUR + minute * MS_MINUTE + now;
+		long now = (startDate / DateUtils.DAY_IN_MILLIS) * DateUtils.DAY_IN_MILLIS;
+		long endDate = hour * DateUtils.HOUR_IN_MILLIS + minute * DateUtils.MINUTE_IN_MILLIS + now;
 		interval = endDate - startDate;
 		if (interval < 0) {
 			// 過去の時刻だったら1日加える
-			interval += MS_DAY;
+			interval += DateUtils.DAY_IN_MILLIS;
 		}
 
 		return interval;
@@ -235,14 +227,14 @@ public class CountDownTimer implements Runnable, LifeSycle {
 				return;
 			}
 
-			hour = (int) (time / MS_HOUR);
-			time -= hour * MS_HOUR;
+			hour = (int) (time / DateUtils.HOUR_IN_MILLIS);
+			time -= hour * DateUtils.HOUR_IN_MILLIS;
 
-			minute = (int) (time / MS_MINUTE);
-			time -= minute * MS_MINUTE;
+			minute = (int) (time / DateUtils.MINUTE_IN_MILLIS);
+			time -= minute * DateUtils.MINUTE_IN_MILLIS;
 
-			sec = (int) (time / (MS_SECOND));
-			time -= sec * MS_SECOND;
+			sec = (int) (time / (DateUtils.SECOND_IN_MILLIS));
+			time -= sec * DateUtils.SECOND_IN_MILLIS;
 
 			msec = (int) time;
 		}
