@@ -1,6 +1,9 @@
 package com.naosim.quicktimer;
 
+import com.naosim.quicktimer.OptionHelper.OptionListener;
+
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,7 +15,7 @@ import android.os.Handler;
  * @author naosim
  *
  */
-public class SoundEffectPlayer implements LifeSycle {
+public class SoundEffectPlayer implements LifeSycle, OptionListener {
 	/** 再生時間[msec] */
 	public static final int TIME_PLAYING = 5000;
 	
@@ -23,6 +26,7 @@ public class SoundEffectPlayer implements LifeSycle {
 	public MediaPlayer pi;
 	public MediaPlayer select;
 	public MediaPlayer bump;
+	public MediaPlayer chirp;
 	
 	/**
 	 * コンストラクタ
@@ -30,14 +34,15 @@ public class SoundEffectPlayer implements LifeSycle {
 	 */
 	public SoundEffectPlayer(Context context) {
 		this.mContext = context;
-		alerm = MediaPlayer.create(context, R.raw.eb_win);
-	    alerm.setLooping(false);
-	    pi = MediaPlayer.create(context, R.raw.buy1);
+		setDefaultAlerm();
+	    pi = MediaPlayer.create(context, R.raw.chirp);
 	    pi.setLooping(false);
-	    select = MediaPlayer.create(context, R.raw.get_2);
+	    select = MediaPlayer.create(context, R.raw.chirp);
 	    select.setLooping(false);
-	    bump = MediaPlayer.create(context, R.raw.get_2);
+	    bump = MediaPlayer.create(context, R.raw.chirp);
 	    bump.setLooping(false); 
+	    chirp = MediaPlayer.create(context, R.raw.chirp);
+	    chirp.setLooping(false); 
 	}
 	
 	/**
@@ -66,14 +71,31 @@ public class SoundEffectPlayer implements LifeSycle {
 	}
 	
 	public void playPi() {
+		if(!isSeEnable) {
+			return;
+		}
 		pi.start();
 	}
 	
+	public void playChrip() {
+		if(!isSeEnable) {
+			return;
+		}
+		chirp.start();
+	}
+	
 	public void playBump() {
+		if(!isSeEnable) {
+			return;
+		}
 		bump.start();
 	}
 	
 	public void playSelect() {
+		if(!isSeEnable) {
+			return;
+		}
+		
 		if(select.isPlaying()) {
 			select.pause();
 			select.seekTo(0);
@@ -121,5 +143,30 @@ public class SoundEffectPlayer implements LifeSycle {
 		
 	}
 
+	public boolean isSeEnable = true;
+	
+	/**
+	 * 効果音(アラーム音以外の音)の生成有無の設定
+	 */
+	public void setSeEnable(boolean isSeEnable) {
+		this.isSeEnable = isSeEnable;
+	}
+	
+	public boolean setUserAlerm(Uri uri) {
+		try{
+			alerm = MediaPlayer.create(mContext, uri);
+		}catch(Exception e) {
+			return false;
+		}catch (Error e) {
+			return false;
+		}
+	    alerm.setLooping(false);
+	    return true;
+	}
+	
+	public void setDefaultAlerm() {
+		alerm = MediaPlayer.create(mContext, R.raw.eb_win);
+	    alerm.setLooping(false);
+	}
 
 }

@@ -7,12 +7,19 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.format.DateUtils;
 import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,13 +28,16 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.naosim.quicktimer.ControlButtonHelper.ControlButtonListener;
 import com.naosim.quicktimer.CountDownTimer.CountDownTimerListener;
 import com.naosim.quicktimer.CountDownTimer.TimeSet;
+import com.naosim.quicktimer.OptionHelper.OptionListener;
+import com.naosim.quicktimer.OptionHelper.StartActivityForResultListener;
 
 public class QuickTimerActivity extends Activity implements
-		CountDownTimerListener, OnClickListener, ControlButtonListener {
+		CountDownTimerListener, OnClickListener, ControlButtonListener, StartActivityForResultListener {
 	public static final String TAG = "QuickTimerActivity";
 
 	/** 設定できる時間[分]の配列 */
@@ -44,8 +54,9 @@ public class QuickTimerActivity extends Activity implements
 	public Bit3ViewHelper minHelper;
 	public Bit3ViewHelper secHelper;
 	public Bit3ViewHelper msecHelper;
-	
+
 	public ControlButtonHelper controlButtonHelper;
+	public OptionHelper optionHelper;
 
 	/** タイマー中に戻るキーを押した場合に表示するダイアログ */
 	public Dialog backDialog;
@@ -58,6 +69,9 @@ public class QuickTimerActivity extends Activity implements
 		// タイトルバー削除
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
+		sePlayer = new SoundEffectPlayer(this);
+		optionHelper = new OptionHelper(getMenuInflater(), sePlayer, this, getPreferences(MODE_PRIVATE));
+		sePlayer.setSeEnable(optionHelper.getSeEnable());
 
 		minHelper = new Bit3ViewHelper((ViewGroup) findViewById(R.id.minBase))
 				.setBitCount(2);
@@ -66,6 +80,11 @@ public class QuickTimerActivity extends Activity implements
 		msecHelper = new Bit3ViewHelper((ViewGroup) findViewById(R.id.msecBase));
 
 		findViewById(R.id.baseView).setOnClickListener(this);
+
+		View optionText = findViewById(R.id.optionText);
+		optionText.setOnClickListener(this);
+		registerForContextMenu(optionText);
+
 		findViewById(R.id.optionText).setOnClickListener(this);
 
 		backDialog = createBackDialog();
@@ -86,11 +105,12 @@ public class QuickTimerActivity extends Activity implements
 
 		lifeSycleManager.add(timer);
 
-		sePlayer = new SoundEffectPlayer(this);
+		
 		lifeSycleManager.add(sePlayer);
 
 		// TextViewのフォントを変更する
-		Typeface typeface = Typeface.createFromAsset(getAssets(), getString(R.string.fontFileName));
+		Typeface typeface = Typeface.createFromAsset(getAssets(),
+				getString(R.string.fontFileName));
 		setupFont((ViewGroup) findViewById(R.id.baseView), typeface);
 	}
 
@@ -162,7 +182,8 @@ public class QuickTimerActivity extends Activity implements
 			menu.add(Menu.NONE, Menu.FIRST + num, Menu.NONE, "" + MINUTES[i]
 					+ getString(R.string.menuMinuteText));
 		}
-		menu.add(Menu.NONE, Menu.FIRST + MINUTES.length + 1, Menu.NONE, getString(R.string.menuTime));
+		menu.add(Menu.NONE, Menu.FIRST + MINUTES.length + 1, Menu.NONE,
+				getString(R.string.menuTime));
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -215,7 +236,8 @@ public class QuickTimerActivity extends Activity implements
 
 	public Dialog createBackDialog() {
 		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-		alertDialogBuilder.setTitle(getString(android.R.string.dialog_alert_title));
+		alertDialogBuilder
+				.setTitle(getString(android.R.string.dialog_alert_title));
 		alertDialogBuilder.setMessage(getString(R.string.backAlertMessage));
 		alertDialogBuilder.setPositiveButton(android.R.string.ok,
 				onClickListener);
@@ -259,7 +281,8 @@ public class QuickTimerActivity extends Activity implements
 			// 画面を押したらメニューが表示される
 			openOptionsMenu();
 		} else if (v.getId() == R.id.optionText) {
-			// TODO オプション画面
+			// 設定画面表示
+			openContextMenu(v);
 		}
 
 	}
@@ -293,4 +316,40 @@ public class QuickTimerActivity extends Activity implements
 
 	}
 
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		
+		sePlayer.playChrip();
+		optionHelper.onCreateContextMenu(menu, v, menuInfo);
+
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		sePlayer.playChrip();
+		
+		optionHelper.onContextItemSelected(item);
+
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		// 戻り値が大丈夫
+		if (requestCode == 2 && resultCode == RESULT_OK) {
+			// RingtoneのURI取得
+			Uri uri = data
+					.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+			if (sePlayer.setUserAlerm(uri)) {
+				// 指定成功
+				optionHelper.setUserAlerm(uri);
+			} else {
+				// 指定失敗
+				Toast.makeText(this, "再生の設定に失敗しました。", Toast.LENGTH_SHORT);
+			}
+		}
+	}
 }

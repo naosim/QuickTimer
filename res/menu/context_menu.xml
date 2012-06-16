@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item android:title="確認音の設定">
+        <menu>
+            <item
+                android:id="@+id/seOn"
+                android:title="確認音 ON">
+            </item>
+            <item
+                android:id="@+id/seOff"
+                android:title="確認音 OFF">
+            </item>
+        </menu>
+    </item>
+    <item android:title="アラーム音の設定">
+        <menu>
+            <item
+                android:id="@+id/defaultAlerm"
+                android:title="デフォルト">
+            </item>
+            <item
+                android:id="@+id/userAlerm"
+                android:title="ユーザ指定">
+            </item>
+        </menu>
+    </item>
+
+</menu>
