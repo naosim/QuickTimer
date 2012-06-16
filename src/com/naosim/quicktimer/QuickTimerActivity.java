@@ -7,6 +7,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -14,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -44,6 +46,8 @@ public class QuickTimerActivity extends Activity implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		
 
 		// タイトルバー削除
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -53,6 +57,8 @@ public class QuickTimerActivity extends Activity implements
 		sec = (TextView) findViewById(R.id.sec);
 		msec = (TextView) findViewById(R.id.msec);
 
+		min.setTypeface(Typeface.createFromAsset(getAssets(), "square.ttf"));
+
 		findViewById(R.id.baseView).setOnClickListener(this);
 		findViewById(R.id.stopText).setOnClickListener(this);
 
@@ -61,6 +67,20 @@ public class QuickTimerActivity extends Activity implements
 		timer.setInterval(DEFAULT_TIME).start();
 
 		sePlayer = new SoundEffectPlayer(this);
+		
+		Typeface typeface = Typeface.createFromAsset(getAssets(), "square.ttf");
+		setupFont((ViewGroup)findViewById(R.id.baseView), typeface);
+	}
+	
+	public static void setupFont(ViewGroup baseView, Typeface typeface) {
+		for(int i = 0; i < baseView.getChildCount(); i++) {
+			View v = baseView.getChildAt(i);
+			if(v instanceof ViewGroup) {
+				setupFont((ViewGroup)v, typeface);
+			} else if(v instanceof TextView) {
+				((TextView)v).setTypeface(typeface);
+			}
+		}
 	}
 
 	@Override
