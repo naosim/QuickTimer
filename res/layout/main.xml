@@ -42,30 +42,27 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
          >
+         <include layout="@layout/bit3"
+             android:id="@+id/minBase"
+             />
+         <TextView
+             android:layout_weight="1"
+             style="@style/number"
+             android:text=":" />
+
          
-         <TextView
-             android:id="@+id/min"
-             android:layout_weight="5"
-             style="@style/number"
-             android:text="00" />
+         <include layout="@layout/bit3"
+             android:id="@+id/secBase"
+             />    
          <TextView
              android:layout_weight="1"
              style="@style/number"
              android:text=":" />
-         <TextView
-             android:id="@+id/sec"
-             android:layout_weight="5"
-             style="@style/number"
-             android:text="00" />
-         <TextView
-             android:layout_weight="1"
-             style="@style/number"
-             android:text=":" />
-         <TextView
-             android:id="@+id/msec"
-             android:layout_weight="5"
-             style="@style/number"
-             android:text="000" />
+
+         
+         <include layout="@layout/bit3"
+             android:id="@+id/msecBase"
+             />
         
     </LinearLayout>
     

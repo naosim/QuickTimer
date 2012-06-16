@@ -35,10 +35,15 @@ public class QuickTimerActivity extends Activity implements
 	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
 	public SoundEffectPlayer sePlayer;
-
-	public TextView min;
-	public TextView sec;
-	public TextView msec;
+//
+//	public TextView min;
+//	public TextView sec;
+//	public TextView msec;
+	
+	public Bit3ViewHelper minHelper;
+	public Bit3ViewHelper secHelper;
+	public Bit3ViewHelper msecHelper;
+	
 	/** タイマー中に戻るキーを押した場合に表示するダイアログ */
 	public Dialog backDialog;
 
@@ -52,12 +57,10 @@ public class QuickTimerActivity extends Activity implements
 		// タイトルバー削除
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
-
-		min = (TextView) findViewById(R.id.min);
-		sec = (TextView) findViewById(R.id.sec);
-		msec = (TextView) findViewById(R.id.msec);
-
-		min.setTypeface(Typeface.createFromAsset(getAssets(), "square.ttf"));
+		
+		minHelper = new Bit3ViewHelper((ViewGroup)findViewById(R.id.minBase)).setBitCount(2);
+		secHelper = new Bit3ViewHelper((ViewGroup)findViewById(R.id.secBase)).setBitCount(2);
+		msecHelper = new Bit3ViewHelper((ViewGroup)findViewById(R.id.msecBase));
 
 		findViewById(R.id.baseView).setOnClickListener(this);
 		findViewById(R.id.stopText).setOnClickListener(this);
@@ -172,9 +175,9 @@ public class QuickTimerActivity extends Activity implements
 	public void onDoing(TimeSet timeSet) {
 
 		// viewへセット
-		msec.setText(Utils.format3(timeSet.msec));
-		sec.setText(Utils.format2(timeSet.sec));
-		min.setText(Utils.format2(timeSet.hour * 60 + timeSet.minute));
+		msecHelper.setInt(timeSet.msec);
+		secHelper.setInt(timeSet.sec);
+		minHelper.setInt(timeSet.hour * 60 + timeSet.minute);
 	}
 
 	@Override
