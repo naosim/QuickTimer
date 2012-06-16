@@ -22,11 +22,12 @@ import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.naosim.quicktimer.ControlButtonHelper.ControlButtonListener;
 import com.naosim.quicktimer.CountDownTimer.CountDownTimerListener;
 import com.naosim.quicktimer.CountDownTimer.TimeSet;
 
 public class QuickTimerActivity extends Activity implements
-		CountDownTimerListener, OnClickListener {
+		CountDownTimerListener, OnClickListener, ControlButtonListener {
 	public static final String TAG = "QuickTimerActivity";
 
 	/** 設定できる時間[分]の配列 */
@@ -37,13 +38,15 @@ public class QuickTimerActivity extends Activity implements
 	public CountDownTimer timer = new CountDownTimer(this);
 	/** 通知音を再生を管理する */
 	public SoundEffectPlayer sePlayer;
-	
+
 	public LifeSycleManager lifeSycleManager = new LifeSycleManager();
-	
+
 	public Bit3ViewHelper minHelper;
 	public Bit3ViewHelper secHelper;
 	public Bit3ViewHelper msecHelper;
 	
+	public ControlButtonHelper controlButtonHelper;
+
 	/** タイマー中に戻るキーを押した場合に表示するダイアログ */
 	public Dialog backDialog;
 
@@ -55,32 +58,42 @@ public class QuickTimerActivity extends Activity implements
 		// タイトルバー削除
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
-		
-		minHelper = new Bit3ViewHelper((ViewGroup)findViewById(R.id.minBase)).setBitCount(2);
-		secHelper = new Bit3ViewHelper((ViewGroup)findViewById(R.id.secBase)).setBitCount(2);
-		msecHelper = new Bit3ViewHelper((ViewGroup)findViewById(R.id.msecBase));
+
+		minHelper = new Bit3ViewHelper((ViewGroup) findViewById(R.id.minBase))
+				.setBitCount(2);
+		secHelper = new Bit3ViewHelper((ViewGroup) findViewById(R.id.secBase))
+				.setBitCount(2);
+		msecHelper = new Bit3ViewHelper((ViewGroup) findViewById(R.id.msecBase));
 
 		findViewById(R.id.baseView).setOnClickListener(this);
-		findViewById(R.id.stopText).setOnClickListener(this);
+		findViewById(R.id.optionText).setOnClickListener(this);
 
 		backDialog = createBackDialog();
-		
-		if(savedInstanceState == null) {
+
+		if (savedInstanceState == null) {
 			timer.setInterval(DEFAULT_TIME).start();
-		}else{
+		} else {
 			timer.load(savedInstanceState);
 		}
-		
+
+		// Start/Stopのボタン
+		controlButtonHelper = new ControlButtonHelper(
+				(TextView) findViewById(R.id.stopText));
+		controlButtonHelper.setControlButtonListener(this);
+		controlButtonHelper
+				.setStatus(timer.isDoing() ? ControlButtonHelper.STOP
+						: ControlButtonHelper.START);
+
 		lifeSycleManager.add(timer);
 
 		sePlayer = new SoundEffectPlayer(this);
 		lifeSycleManager.add(sePlayer);
-		
+
 		// TextViewのフォントを変更する
 		Typeface typeface = Typeface.createFromAsset(getAssets(), "square.ttf");
-		setupFont((ViewGroup)findViewById(R.id.baseView), typeface);
+		setupFont((ViewGroup) findViewById(R.id.baseView), typeface);
 	}
-	
+
 	/**
 	 * 縦横切り替え時のイベント
 	 */
@@ -89,17 +102,16 @@ public class QuickTimerActivity extends Activity implements
 		super.onSaveInstanceState(outState);
 		// 設定した時間を保存する
 		timer.save(outState);
-		
-		
+
 	}
-	
+
 	public static void setupFont(ViewGroup baseView, Typeface typeface) {
-		for(int i = 0; i < baseView.getChildCount(); i++) {
+		for (int i = 0; i < baseView.getChildCount(); i++) {
 			View v = baseView.getChildAt(i);
-			if(v instanceof ViewGroup) {
-				setupFont((ViewGroup)v, typeface);
-			} else if(v instanceof TextView) {
-				((TextView)v).setTypeface(typeface);
+			if (v instanceof ViewGroup) {
+				setupFont((ViewGroup) v, typeface);
+			} else if (v instanceof TextView) {
+				((TextView) v).setTypeface(typeface);
 			}
 		}
 	}
@@ -115,7 +127,7 @@ public class QuickTimerActivity extends Activity implements
 		super.onResume();
 		// スリープに入らないように設定
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
+
 		lifeSycleManager.onResume();
 	}
 
@@ -124,7 +136,7 @@ public class QuickTimerActivity extends Activity implements
 		super.onPause();
 		// スリープに入らない設定を解除
 		getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
+
 		lifeSycleManager.onPause();
 
 	}
@@ -177,21 +189,13 @@ public class QuickTimerActivity extends Activity implements
 			long interval = MINUTES[index] * 60 * 1000;
 
 			// タイマーをセット
-			setTimer(interval);
+			timer.setInterval(interval).start();
+			controlButtonHelper.setStatus(ControlButtonHelper.STOP);
 		} else {
 			showTimePickerDialog();
 		}
 
 		return true;
-	}
-
-	/**
-	 * タイマーをセットする
-	 * 
-	 * @param interval
-	 */
-	public void setTimer(long interval) {
-		timer.setInterval(interval).start();
 	}
 
 	@Override
@@ -254,10 +258,8 @@ public class QuickTimerActivity extends Activity implements
 			sePlayer.stopAlerm();
 			// 画面を押したらメニューが表示される
 			openOptionsMenu();
-		} else if (v.getId() == R.id.stopText) {
-			if (timer.stop()) {
-				sePlayer.playBump();
-			}
+		} else if (v.getId() == R.id.optionText) {
+			// TODO オプション画面
 		}
 
 	}
@@ -275,6 +277,20 @@ public class QuickTimerActivity extends Activity implements
 		final TimePickerDialog timePickerDialog = new TimePickerDialog(this,
 				onTimeSetListener, now.getHours(), now.getMinutes(), true);
 		timePickerDialog.show();
+	}
+
+	@Override
+	public void start() {
+		timer.start();
+		sePlayer.playSelect();
+	}
+
+	@Override
+	public void stop() {
+		if (timer.stop()) {
+			sePlayer.playPi();
+		}
+
 	}
 
 }

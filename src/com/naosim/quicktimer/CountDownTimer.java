@@ -71,20 +71,13 @@ public class CountDownTimer implements Runnable, LifeSycle {
 		return this;
 	}
 
-	/**
-	 * 開始 既に再生中の場合は、とくに何もしない
-	 * 
-	 * @return
-	 */
-	public CountDownTimer start() {
+	private CountDownTimer start(long startDate) {
 		Log.e("CountDownTimer", "start");
 		if (isDoing()) {
 			return this;
 		}
 
-		Log.e("CountDownTimer", "go");
-
-		startDate = new Date().getTime();
+		this.startDate = startDate;
 
 		if (interval < 0) {
 			interval = createInterval(hour, minute, startDate);
@@ -97,6 +90,19 @@ public class CountDownTimer implements Runnable, LifeSycle {
 		handler.postDelayed(this, 10);
 
 		return this;
+	}
+
+	/**
+	 * 開始 既に再生中の場合は、とくに何もしない
+	 * 
+	 * @return
+	 */
+	public CountDownTimer start() {
+		return start(new Date().getTime());
+	}
+
+	public CountDownTimer restart() {
+		return start(startDate);
 	}
 
 	public static long createInterval(int hour, int minute, long startDate) {
@@ -123,6 +129,8 @@ public class CountDownTimer implements Runnable, LifeSycle {
 			countDownTimerListener.onDoing(new TimeSet(restTime));
 		}
 
+		interval = restTime;
+		
 		if (handler != null) {
 
 			handler.removeCallbacks(this);

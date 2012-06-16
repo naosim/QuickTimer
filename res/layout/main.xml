@@ -30,37 +30,7 @@
         android:background="@color/yellow" />
 
     <!-- 時間部分 -->
-
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:orientation="vertical"
-        android:layout_weight="1" >
-
-        <include
-            android:id="@+id/minBase"
-            layout="@layout/bit3" />
-
-        <TextView
-            style="@style/unit"
-            android:text="@string/minute"/>
-
-        <include
-            android:id="@+id/secBase"
-            layout="@layout/bit3" />
-
-        <TextView
-            style="@style/unit"
-            android:text="@string/second" />
-
-        <include
-            android:id="@+id/msecBase"
-            layout="@layout/bit3" />
-
-        <TextView
-            style="@style/unit"
-            android:text="@string/msecond" />
-    </LinearLayout>
+    <include layout="@layout/time_display" />
 
     <View
         android:layout_width="fill_parent"
@@ -69,24 +39,7 @@
         android:layout_marginRight="8dp"
         android:background="@color/yellow" />
 
-    
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="center"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/settingText"
-            android:text="SETTING"
-            style="@style/button" />
-        <TextView
-            android:id="@+id/stopText"
-            android:text="@string/stop"
-            style="@style/button" />
-    </LinearLayout>
+    <include layout="@layout/buttons" />
     
     
 
