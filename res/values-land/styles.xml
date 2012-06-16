@@ -12,8 +12,9 @@
 
     <style name="bit3">
         <item name="android:layout_width">0dp</item>
+        <item name="android:minWidth">24dp</item>
         <item name="android:gravity">center</item>
-        <item name="android:layout_weight">5</item>
+        <item name="android:layout_weight">8</item>
     </style>
 
 </resources>
